@@ -1,0 +1,14 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.bbl
+*.blg
+*.dvi
+t
+.latexmkrc
+*.json
+*.rb
+*.md
+*100k*
