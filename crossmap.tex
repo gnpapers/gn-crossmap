@@ -122,14 +122,18 @@
 ]{\inits{DYM}\fnm{Dmitry Y.} \snm{Mozzherin}}
 \author[
    addressref={aff2},
+   email={wouter.addink@naturalis.nl}
+]{\inits{WA}\fnm{Wouter} \snm{Addink}}
+\author[
+   addressref={aff3},
    email={rui.figueira@iict.pt}
 ]{\inits{RF}\fnm{Rui} \snm{Figueira}}
 \author[
-   addressref={aff3},
+   addressref={aff4},
    email={wouter.koch@artsdatabanken.no}
 ]{\inits{WK}\fnm{Wouter} \snm{Koch}}
 \author[
-   addressref={aff3},
+   addressref={aff4},
    email={toril.moen@artsdatabanken.no}
 ]{\inits{TLM}\fnm{Toril L.} \snm{Moen}}
 
@@ -151,13 +155,19 @@
   \cny{US}                             % country
 }
 \address[id=aff2]{%                    % unique id
-  \orgname{Instituto de Investigação Científica e Tropical},
-  \street{R Junqueira 5,30,86 Lisboa},
-  \city{Lisbon},                    % city
-  \postcode{1300-342},
-  \cny{Portuga}                             % country
+  \orgname{Naturalis},
+  \street{Postbus 9517, 2300 RA},
+  \city{Leiden},                       % city
+  \cny{Holland}
 }
 \address[id=aff3]{%                    % unique id
+  \orgname{Instituto de Investigação Científica e Tropical},
+  \street{R Junqueira 5,30,86 Lisboa},
+  \city{Lisbon},                       % city
+  \postcode{1300-342},
+  \cny{Portugal}                       % country
+}
+\address[id=aff4]{%                    % unique id
   \orgname{Norwegian Biodiversity Information Centre},
   \street{7491 Trondheim},
   \cny{Norway}
@@ -189,9 +199,25 @@
 
 \begin{abstract} % abstract
   \parttitle{Background}
+  Large biological checklists require verification to remove typographical
+  mistakes, and erroneous names, to update to currently used names for outdated
+  ones. Usually such lists are stored in a some sort of a spreadsheet, and
+  the curator of the list are interested in comparing it with either a
+  nomenclatural source like Index Fungorum, or IPNI, or with a taxonomical
+  source like Catalogue of Life. Comparing such lists by hand is very tedious
+  and error-prone.
   \parttitle{Results}
+  We created a convenience tool gn-crossmap which allows to intelligently match
+  names from such list and write restuls back into a spreadsheet. The tool is
+  able to process 1 million names in about 10 hours.
   \parttitle{Conclusions}
+  We introduce a tool for biodiversity informaticians -- gnCrossmap, which
+  greatly simplifies mapping of names from a list to an authoritative source of
+  names.
 \end{abstract}
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -245,14 +271,86 @@
 
 \section*{Background}
 
+\begin{itemize}
+  \item Many reasons people make checklists of names
+    \begin{itemize}
+      \item Citizen scientists
+      \item Organizations: Bird list US, IUCN
+      \item Countries create checklists
+    \end{itemize}
+  \item When checklists grow they become hard/impossible to maintain
+  \item Need to check for misspellings, and existence of names
+  \item Need to check for outdated names
+  \item Created a list that checks
+  \item Problems -- hard to check agains resources as names are spelled
+    differently
+  \item gn-crossmap created to normalize sources and queries to match them
+  \item gn-crossmap matches one resource at a time 6 ways
+\end{itemize}
 
 \section*{Implementation}
+\begin{itemize}
+  \item Implemented as a ``mashup'' to GN resolver
+  \item Ruby gem and Ruby web-interface
+  \item Installation
+    \begin{itemize}
+      \item as a gem
+      \item as a web-interface
+      \item as a docker container
+    \end{itemize}
+\end{itemize}
 
 \section*{Results and Discussion}
-
+\begin{itemize}
+  \item Why it is hard to match a source to a source
+    \begin{itemize}
+      \item web-iterfaces are slow
+      \item it is hard to get format right
+      \item most often people put data into spreadsheets of their own
+        formatting
+    \end{itemize}
+  \item why it is hard to match name to a name
+    \begin{itemize}
+      \item differences in spelling
+      \item differences in authorship and ranks
+      \item some names have homonyms
+      \item some names have chresonyms
+      \item some names are misspelled
+      \item some names do not exist in database
+      \item some names do not exist
+    \end{itemize}
+  \item introduce gn-crossmap
+  \item requirements
+    \begin{itemize}
+      \item able to work with many formats
+      \item able to map unknown fields to known fields
+      \item able to work with datasets of thousands and millions of rows
+      \item finds exact matches, canonical form matches, fuzzy matches, partial
+        matches
+      \item preserves original data
+      \item gives information about type of a match (currently used, synonym
+        etc)
+      \item gives information about confidence score
+    \end{itemize}
+  \item current problems and future work
+    \begin{itemize}
+      \item infraspecific ranks in botany
+      \item intelligent authorshipo type recognition
+      \item ability to compare concepts
+    \end{itemize}
+\end{itemize}
 
 \section*{Conclusions}
-
+\begin{itemize}
+  \item introduce gn-match
+  \item gn-match solves existing problems...
+  \item gn-match  future work
+    \begin{itemize}
+      \item infraspecific ranks recognition (botany mostly}
+      \item more intelligent work with taxon concepts
+      \item more intelligent work with authorships
+    \end{itemize}
+\end{itemize}
 
 \section*{Availability and Requirements}
 
@@ -286,7 +384,7 @@ Grant and people to mention
 
 % if your bibliography is in bibtex format, use those commands:
 \bibliographystyle{bmc-mathphys} % Style BST file
-\bibliography{crossmap.bib}      % Bibliography file (usually '*.bib' )
+\bibliography{ref}      % Bibliography file (usually '*.bib' )
 
 % or include bibliography directly:
 % \begin{thebibliography}
