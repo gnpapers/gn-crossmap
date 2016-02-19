@@ -57,6 +57,12 @@
 %\usepackage[applemac]{inputenc} %applemac support if unicode package fails
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
 
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@addmarginpar}{\ifodd\c@page}{\ifodd\c@page\@tempcnta\m@ne}{}{}
+\makeatother
+\reversemarginpar
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                             %%
@@ -208,7 +214,7 @@
   and error-prone.
   \parttitle{Results}
   We created a convenience tool gn-crossmap which allows to intelligently match
-  names from such list and write restuls back into a spreadsheet. The tool is
+  names from such list and write results back into a spreadsheet. The tool is
   able to process 1 million names in about 10 hours.
   \parttitle{Conclusions}
   We introduce a tool for biodiversity informaticians -- gnCrossmap, which
@@ -278,6 +284,15 @@
       \item Organizations: Bird list US, IUCN
       \item Countries create checklists
     \end{itemize}
+  \item Example usecases \marginpar{Use cases from Rio's email}
+    \begin{itemize}
+      \item Norwegian National Checklist
+      \item Portuguese Plant List
+      \item Preparation of a citizen scientist checklist for publication
+        thorugh GBIF to national checklist
+      \item Quality check of national GBIF data sets against a reference
+        checklist.
+    \end{itemize}
   \item When checklists grow they become hard/impossible to maintain
   \item Need to check for misspellings, and existence of names
   \item Need to check for outdated names
@@ -335,16 +350,17 @@
   \item current problems and future work
     \begin{itemize}
       \item infraspecific ranks in botany
-      \item intelligent authorshipo type recognition
+      \item intelligent authorship type recognition
       \item ability to compare concepts
     \end{itemize}
 \end{itemize}
 
+
 \section*{Conclusions}
 \begin{itemize}
   \item introduce gn-match
-  \item gn-match solves existing problems...
-  \item gn-match  future work
+  \item gn-crossmap solves existing problems...
+  \item gn-crossmap future work
     \begin{itemize}
       \item infraspecific ranks recognition (botany mostly)
       \item more intelligent work with taxon concepts
