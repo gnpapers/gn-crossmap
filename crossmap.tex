@@ -205,23 +205,28 @@
 
 \begin{abstract} % abstract
   \parttitle{Background}
-  Large biological checklists require verification to remove typographical
-  mistakes, and erroneous names, to update to currently used names for outdated
-  ones. Usually such lists are stored in a some sort of a spreadsheet, and
-  the curator of the list are interested in comparing it with either a
-  nomenclatural source like Index Fungorum, or IPNI, or with a taxonomical
-  source like Catalogue of Life. Comparing such lists by hand is very tedious
-  and error-prone.
+  Large checklists that include biological names require that the names are validated if we are to promote interoperability of data sources. Lists may present the same names in different ways or have errors in spelling or author information. Validation allows typographical
+  mistakes and erroneous names to be identified as a prelude to replacing incorrect items with names that are endorsed by one or more taxonomic authorities.  Usually, lists of names are stored in a some sort of a spreadsheet, and
+  the curator of the list needs to compare each entry with a
+  nomenclatural source like Index Fungorum, ZooBank, or IPNI, and/or with a taxonomic sources like AlgaeBase or with a federating portal such as Catalogue of Life. Comparing such lists by hand is tedious
+  and the process may generate its own errors.
+  %comment Paddy: change verification to validation?
+  
+  
   \parttitle{Results}
-  We created a convenience tool gn-crossmap which allows to intelligently match
-  names from such list and write results back into a spreadsheet. The tool is
+  We created a convenience tool gn-crossmap which intelligently matches
+  names from lists and writes the results back into the source. The tool is
   able to process 1 million names in about 10 hours.
+  
+  
   \parttitle{Conclusions}
   We introduce a tool for biodiversity informaticians -- gnCrossmap, which
-  greatly simplifies mapping of names from a list to an authoritative source of
-  names.
+  greatly simplifies accelerates mapping of names from a source to one or more authoritative sources of   names.
+  
+
 \end{abstract}
 
+%Comment paddy I believe the paper should be set in the broadest relevant context, and this should be evident in both the abstract and Intro.    What is the goal? Is the goal here simply to try to map names in any source to CoL.  Or a tool that can map names in any source to any other list.  The long term goal should be the second. We list all of the possible problems, and then the possible solutions.  There can be problems with incorrect spellings, problems with different legitimate variants of name-strings, use of junior synonyms.  That is, the system should be customizable to suit different users. There are, for example, governmental agencies that are not allowed to change the list of names and they MUST turn back a contemporary name to an outdated name; there is another class of use case that acknowledges that taxonomists hold different views and want to have a framework of names that they can live with. Then there are idiosyncratic cases - such as the Australian Fisheries that require users to adopt common names. Then, with the problems dissected out, we can then consider the strategies.  It seems that there are four options: management by hand, algorithmic normalization, algorithmic standardization and algorithmic resolution.  We should distinguish normalization - mapping to a reference list; and standardization where everyone maps to the same reference list.  CoL has always been a champion of standardization. GN is a champion of algorithmic resolution that is informed by authoritative lists. }
 
 
 
@@ -281,6 +286,8 @@
   \item Many reasons people make checklists of names
     \begin{itemize}
       \item Citizen scientists
+      \item Taxonomists
+      \item Governmental agencies with interests in particular taxa - fisheries, endangered species, invasive species
       \item Organizations: Bird list US, IUCN
       \item Countries create checklists
     \end{itemize}
@@ -289,16 +296,16 @@
       \item Norwegian National Checklist
       \item Portuguese Plant List
       \item Preparation of a citizen scientist checklist for publication
-        thorugh GBIF to national checklist
+        through GBIF to national checklist
       \item Quality check of national GBIF data sets against a reference
         checklist.
     \end{itemize}
-  \item When checklists grow they become hard/impossible to maintain
+  \item When checklists grow they are often in a form that is hard to maintain, for example to ensure that each name is current
   \item Need to check for misspellings, and existence of names
   \item Need to check for outdated names
   \item Created a list that checks
   \item Problems -- hard to check against resources as names are spelled
-    differently
+    differently; for which parser was developed
   \item gn-crossmap created to normalize sources and queries to match them
   \item gn-crossmap matches one resource at a time 6 ways
 \end{itemize}
