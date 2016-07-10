@@ -50,18 +50,22 @@
 %%% Load packages
 %\usepackage{amsthm,amsmath}
 %\RequirePackage{natbib}
-%\RequirePackage{hyperref}
+\RequirePackage{hyperref}
 \usepackage[utf8]{inputenc} %unicode support
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{booktabs}
 %\usepackage[applemac]{inputenc} %applemac support if unicode package fails
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
 
 \usepackage{etoolbox}
+
+%% Set margin notes
 \makeatletter
 \patchcmd{\@addmarginpar}{\ifodd\c@page}{\ifodd\c@page\@tempcnta\m@ne}{}{}
 \makeatother
-\reversemarginpar
+\reversemarginpar{}
+\setlist[description]{leftmargin=\parindent,labelindent=\parindent}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,12 +88,6 @@
 %\def\includegraphics{}
 
 
-
-%%% Put your definitions there:
-\startlocaldefs
-\endlocaldefs
-
-
 %%% Begin ...
 \begin{document}
 
@@ -105,7 +103,9 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{gn-crossmap: A Tool to Verify Scientific Names Checklists}
+\title{Scientific Names Checklists Cross-Mapping Tool
+  ``gn\_crossmap''}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -174,7 +174,7 @@
   \orgname{Instituto de Investigação Científica e Tropical},
   \street{R Junqueira 5,30,86 Lisboa},
   \city{Lisbon},                       % city
-  \postcode{1300-342},
+  \postcode{1300--342},
   \cny{Portugal}                       % country
 }
 \address[id=aff4]{%                    % unique id
@@ -215,27 +215,27 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-  \parttitle{Background}
 
-  Large checklists that include biological names require that the names are validated if we are to promote interoperability of data sources. Lists may present the same names in different ways or have errors in spelling or author information. Validation allows typographical
-  mistakes and erroneous names to be identified as a prelude to replacing incorrect items with names that are endorsed by one or more taxonomic authorities.  Usually, lists of names are stored in a some sort of a spreadsheet, and
-  the curator of the list needs to compare each entry with a
-  nomenclatural source like Index Fungorum, ZooBank, or IPNI, and/or with a taxonomic sources like AlgaeBase or with a federating portal such as Catalogue of Life. Comparing such lists by hand is tedious
-  and the process may generate its own errors.
-  %comment Paddy: change verification to validation?
+  \parttitle{Background} Large checklists that include biological names require
+  that the names are validated if we are to promote interoperability of data
+  sources. Lists may present the same names in different ways or have errors in
+  spelling or author information. Validation allows typographical mistakes and
+  erroneous names to be identified as a prelude to replacing incorrect items
+  with names that are endorsed by one or more taxonomic authorities.  Usually,
+  lists of names are stored in a some sort of a spreadsheet, and the curator of
+  the list needs to compare each entry with a nomenclatural source like Index
+  Fungorum, ZooBank, or IPNI, and/or with a taxonomic sources like AlgaeBase or
+  with a federating portal such as Catalogue of Life. Comparing such lists by
+  hand is tedious and the process may generate its own errors.
 
+  \parttitle{Results} We created a convenience tool \textit{gn\_crossmap} which
+  intelligently matches names from lists and writes the results back into the
+  source. The tool is able to process 1 million names in about 10 hours.
 
-  \parttitle{Results}
-  We created a convenience tool gn-crossmap which intelligently matches
-  names from lists and writes the results back into the source. The tool is
-  able to process 1 million names in about 10 hours.
-
-
-  \parttitle{Conclusions}
-
-  We introduce a tool for biodiversity informaticians -- gnCrossmap, which
-  greatly simplifies accelerates mapping of names from a source to one or more authoritative sources of   names.
-
+  \parttitle{Conclusions} The \textit{gn\_crossmap} tool greatly simplifies and
+  accelerates mapping of names from one source to another source. Such mapping
+  allows to find overlap between sources, validate names, find synonyms,
+  discover outdated data.
 
 \end{abstract}
 
@@ -301,65 +301,113 @@
 
   Checklists of scientific names are commonly used for collecting biodiversity
   information. For example citizen scientists create checklists to organize
-  their observations. Environmentalists, ecologists molecular biologists create
-  checklists as a part of their investigations. Countries catalogue their
-  biodiversity information into national checklists. International
-  organizations like Global Biodiversity Information Facility aggregate lists
-  from GBIF country nodes into a massive global database.
+  their observations. Environmentalists, ecologists, molecular biologists
+  create checklists as a part of their investigations. Various governmental
+  agencies and public organizations create lists corresponding to their
+  particular interests --- endangerous species lists, national bird lists,
+  lists of envasive species etc. Countries catalogue their biodiversity
+  information into national checklists. International organizations create
+  lists as well. For example Global Biodiversity Information Facility
+  aggregates lists from GBIF country nodes into a massive global database,
+  Catalogue of Life analyses data from Global Species Databases before
+  incorporation the data into the master checklist. Large digitization projects
+  like iDigBio collect and analyse lists from museums nationwide.
 
   Small checklists can be easily maintained manually, but with their growth an
   algorithmic approach becomes invaluable. There are many challenges in
-  comparison of names strings. Table X. Quite often exact string comparison is
-  not sufficient for matching name-strings because there are many spelling
-  variants of the same name. For example \ldots and \ldots name-strings are
+  comparison of name-strings --- some of them are summarized in
+  Table~\ref{table:challanges}. Quite often exact string comparison is not
+  sufficient for matching name-strings because there are many spelling variants
+  of the same name~\cite{Patterson2016}. For example  \textbf{Carex scirpoidea
+  ssp.\ convoluta (Kük.) Dunlop} and \textbf{Carex scirpoidea Michx.\
+  subsp.\ convoluta (Kükenthal 1909) D.A. Dunlop 1998} name-strings are
   variants of the same name. Sometimes checklists contain misspellings which
   need to be discovered, some names-strings represent more than one taxon
   (homonyms), other contain authorships corresponding to citations instead of a
-  nomenclatural event.
+  nomenclatural event. Challenges described in this paragraph and
+  Table~\ref{table:challenges} as a rule are not isolated from each other and
+  mixed in combinations of various complexity.
+
+  Taxonomy and nomenclature constantly change and evolve. It is often crucially
+  important to keep lists up to date and bring them in accordance to current
+  taxonomic opinions.
+
+\begin{table}[!htb]
+  \begin{center}
+    \caption{Examples of scientific names cross-mapping challenges
+    }\label{table:challanges}
+    \begin{tabular}{lll}
+    \toprule
+    \textbf{Difference in preprocessing} & \{Genus:Aus, Species:bus\} & Aus bus \\
+    \textbf{Infraspecific rank spelling} & Aus bus forma cus & Aus bus f.\ cus
+    \\
+    \textbf{Presense/absense of ranks} & Aus bus f.\ cus & Aus bus cus \\
+    \textbf{Variability in authorship} & Aus bus Linnaeus & Aus bus L. \\
+    \textbf{Homonymic matches} & Aus Linnaeus 1788 & Aus Johnson 1819 \\
+    \textbf{Presense/absense of authorship} & Aus bus Linnaeus & Aus bus \\
+    \textbf{Presense/absense of higher taxa authors} & Aus bus (L.) f.\ cus Smith & Aus bus f. Smith \\
+    \textbf{Variability in year} & Aus bus (L.) 1788 & Aus bus (L. 1789) \\
+    \textbf{Presense/absense of a year} & Aus bus (L. 1788) & Aus bus (L.) \\
+    \textbf{Misspellings} & Aus buss (L. 1788) & Aus bus (L. 1788) \\
+    \textbf{Presense/absense of subgenus} & Aus (Dus) bus (L. 1788) & Aus bus (L. 1788) \\
+    \textbf{Variability in subgenus format} & Aus (Dus) L. 1788 & Aus subgen. Dus L. 1788 \\
+    \textbf{Presense/absense of named hybrids} & xAus bus & Aus bus \\
+    \textbf{Variability of named hybrids spelling} & X Aus bus & xAus bus \\
+    \textbf{Partial matches (Ex: species level)} & Aus bus cus & xAus bus \\
+    \bottomrule
+    \end{tabular}
+  \end{center}
+\end{table}
+
+  PRIOR ART INFORMATION ON CROSSMAPING TOOLS GOES HERE
 
   Some authors of this paper spent significant effort on creation and editing
-  of national species checklists for Norway and Portugal. Using their expertise
-  we developed a tool ``gnCrossmap'' which allows to match name-strings list of
-  any length stored in a spreadsheet to nomenclatural or taxonomic information.
+  of national species checklists for Norway and Portugal, transform citizen
+  scientist observation checklists into GBIF-compatibe datasets, perform
+  quality check of GBIF national data, comparing their records with various
+  high quality data sources. Others participate in finding dulicated records
+  during assemlby stage of the Catalogue of Life, also struggling to create
+  stable identifiers for the Catalogue of Life taxa.  To meet their specific
+  needs we developed a tool ``\textbf{gn\_crossmap}'' that allows to match
+  name-strings list of any length stored in a spreadsheet to almost any
+  publically available nomenclatural or taxonomic data source.
 
   This tool is developed as part of Global Names Architecture, and uses RESTful
   API of Global Names' Resolution service to perform the cross-mapping. The
   crossmapping tool uses spreadsheet information saved into CSV (Comma
   Separated Value) format, intelligently extracts name information from
   corresponding fields and uses multilevel matching algorithms to match
-  name-strings to authoritative dataset.This paper describes ``gnCrossmapper''
-  and explains its usage.
+  name-strings to authoritative dataset.This paper describes
+  ``\textit{gn\_crossmap}'' and explains its usage.
 
-  \begin{itemize}
-
-  \item Many reasons people make checklists of names
-    \begin{itemize}
-      \item Citizen scientists
-      \item Taxonomists
-      \item Governmental agencies with interests in particular taxa - fisheries, endangered species, invasive species
-      \item Organizations: Bird list US, IUCN
-      \item Countries create checklists
-    \end{itemize}
-  \item Example usecases \marginpar{Use cases from Rio's email}
-    \begin{itemize}
-      \item Norwegian National Checklist
-      \item Portuguese Plant List
-      \item Preparation of a citizen scientist checklist for publication
-        through GBIF to national checklist
-      \item Quality check of national GBIF data sets against a reference
-        checklist.
-    \end{itemize}
-  \item When checklists grow they are often in a form that is hard to maintain, for example to ensure that each name is current
-  \item Need to check for misspellings, and existence of names
-  \item Need to check for outdated names
-  \item Created a list that checks
-  \item Problems -- hard to check against resources as names are spelled
-    differently; for which parser was developed
-  \item gn-crossmap created to normalize sources and queries to match them
-  \item gn-crossmap matches one resource at a time 6 ways
-\end{itemize}
 
 \section*{Implementation}
+
+The ``\textit{gn\_crossmap}'' tool is implemented as a ``mashap'', i.e.\ it
+uses existing remote services to achieve its goals. The main idea behind its
+implementation is in reuse of existing tools and algorithms, and wrapping them
+in a package that performs cross-mapping of checklists according to its
+userbase needs.
+
+The ``\textit{gn\_crossmap}'' tool consists of three components:
+
+\begin{description}
+  \item[cross-mapping library] Implements all functionality, and can be called
+    from other Ruby programs
+  \item[command line tool ``\textit{crossmap}'']
+  \item [web-application]
+\end{description}
+
+, a
+command line tool that can be used from a terminal window, a web-based
+application catered for biologists who are infamiliar with programming or
+command line interface. The project is written in Ruby language and organized
+as two separate repositories. Both use popular Ruby Gem framework to create
+reusable Ruby code.
+
+\subsection*{Library}
+
+
 \begin{itemize}
   \item Implemented as a ``mashup'' to GN resolver
   \item Ruby gem and Ruby web-interface
@@ -456,7 +504,7 @@ Grant and people to mention
 
 % if your bibliography is in bibtex format, use those commands:
 \bibliographystyle{bmc-mathphys} % Style BST file
-\bibliography{ref}      % Bibliography file (usually '*.bib' )
+\bibliography{refs}      % Bibliography file (usually '*.bib' )
 
 % or include bibliography directly:
 % \begin{thebibliography}
